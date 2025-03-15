@@ -1,11 +1,18 @@
+import { Environment } from "./environment";
 import { MongoDbConnector } from "./infra/mongoConnector";
-import { EventListener } from "./listener/eventListener";
+import { SwapScheduler } from "./scheduler/swapScheduler";
 
 async function bootstrap() {
   const dbConnector = await MongoDbConnector.getInstance();
 
-  const eventListener = new EventListener();
-  await eventListener.startListening(dbConnector);
+  const swapScheduler = new SwapScheduler(
+    dbConnector,
+    Environment.KAFKA_CLIENT_ID,
+    Environment.KAFKA_BROKERS.split(","),
+    Environment.KAFKA_TOPIC
+  );
+
+  swapScheduler.startScheduling();
 }
 
 bootstrap().catch((err) => {
