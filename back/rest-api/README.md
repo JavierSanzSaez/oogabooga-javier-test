@@ -14,23 +14,26 @@ This is a NestJS application that serves as a backend for various functionalitie
 To get started with this application, follow these steps:
 
 1. **Clone the repository**:
+
    ```
    git clone <repository-url>
    cd my-nestjs-app
    ```
 
 2. **Install dependencies**:
+
    ```
    npm install
    ```
 
 3. **Run the application**:
+
    ```
    npm run start
    ```
 
 4. **Access the application**:
-   Open your browser and navigate to `http://localhost:3000`.
+   Open your browser and navigate to `http://localhost:8080`.
 
 ## Directory Structure
 
