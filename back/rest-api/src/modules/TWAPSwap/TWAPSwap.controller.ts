@@ -1,7 +1,16 @@
-import { BadRequestException, Body, Controller, Get, Post } from '@nestjs/common';
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Get,
+  Post,
+} from '@nestjs/common';
 import { TWAPSwapService } from './TWAPSwap.service';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import { GetTWAPSwapRequestDTO, PlaceTWAPSwapRequestDTO } from './dtos/TWAPSwap.request.dto';
+import {
+  GetTWAPSwapRequestDTO,
+  PlaceTWAPSwapRequestDTO,
+} from './dtos/TWAPSwap.request.dto';
 import { BigNumber } from 'bignumber.js';
 import { GetTWAPSwapResponseDTO } from './dtos/TWAPSwap.response.dto';
 
@@ -56,7 +65,11 @@ export class TWAPSwapController {
       throw new BadRequestException('TokenOut must be a valid EVM address');
     }
 
-    return this.twapSwapService.placeTwapSwapOrder(body);
+    try {
+      await this.twapSwapService.placeTwapSwapOrder(body);
+    } catch (e) {
+      throw new BadRequestException((e as any).message);
+    }
   }
 
   @Get('getTwapSwapOrders')
@@ -71,8 +84,11 @@ export class TWAPSwapController {
       throw new BadRequestException('UserAddress must be a valid EVM address');
     }
 
-    const orders = this.twapSwapService.getTwapSwapOrders(body);
+    const orders = await this.twapSwapService.getTwapSwapOrders(body);
 
-    return orders;
+    return {
+      orders,
+      total: orders.length,
+    };
   }
 }

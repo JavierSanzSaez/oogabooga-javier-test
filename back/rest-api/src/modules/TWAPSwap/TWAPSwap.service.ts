@@ -47,7 +47,7 @@ export class TWAPSwapService {
         tokenIn,
         tokenOut,
         amounts: amounts[index],
-        schedule: time,
+        scheduledTime: time,
         userAddress,
         status: 'pending',
         swapOrderNonce: lastSwapNonce + index + 1,
@@ -66,12 +66,12 @@ export class TWAPSwapService {
     const query: any = { userAddress };
 
     if (startDate || endDate) {
-      query.schedule = {};
+      query.scheduledTime = {};
       if (startDate) {
-        query.schedule.$gte = new Date(startDate);
+        query.scheduledTime.$gte = new Date(startDate);
       }
       if (endDate) {
-        query.schedule.$lte = new Date(endDate);
+        query.scheduledTime.$lte = new Date(endDate);
       }
     }
 

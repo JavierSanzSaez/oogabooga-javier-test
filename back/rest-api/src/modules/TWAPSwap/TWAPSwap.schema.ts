@@ -10,10 +10,16 @@ export class TWAPSwapOrder extends Document {
   tokenOut: string;
 
   @Prop({ required: true })
-  amounts: string[];
+  amountIn: string;
+
+  amountOut: string;
+
+  slippage: string;
 
   @Prop({ required: true })
-  schedule: string[];
+  scheduledTime: string;
+
+  executionTime: string;
 
   @Prop({ required: true })
   userAddress: string;
