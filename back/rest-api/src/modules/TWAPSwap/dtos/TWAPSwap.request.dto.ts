@@ -1,27 +1,54 @@
-import { ApiProperty } from "@nestjs/swagger";
+import { ApiProperty } from '@nestjs/swagger';
 
-export class TWAPSwapRequestDTO {
+export class PlaceTWAPSwapRequestDTO {
   @ApiProperty({
-    description: "Address of the token to swap in",
+    description: 'Address of the token to swap in',
   })
-  tokenIn!: string;
-
-  @ApiProperty({
-    description: "Address of the token to swap out",
-  })
-  tokenOut!: string;
+  tokenIn: string;
 
   @ApiProperty({
-    description: "Array of token amounts (in Wei) to swap per split order",
+    description: 'Address of the token to swap out',
   })
-  amounts!: string[];
+  tokenOut: string;
 
   @ApiProperty({
-    description: "Array of timestamps at which to execute the split orders",
+    description: 'Array of token amounts (in Wei) to swap per split order',
   })
-  schedule!: string[];
+  amounts: string[];
+
   @ApiProperty({
-    description: "Address of ",
+    description: 'Array of timestamps at which to execute the split orders',
   })
-  userAddress!: string;
+  schedule: string[];
+  @ApiProperty({
+    description: 'Address of ',
+  })
+  userAddress: string;
+}
+
+export class GetTWAPSwapRequestDTO {
+  @ApiProperty({
+    description: 'Address of the user',
+  })
+  userAddress: string;
+
+  @ApiProperty({
+    description: 'Start date to filter orders',
+  })
+  startDate: string;
+
+  @ApiProperty({
+    description: 'End date to filter orders',
+  })
+  endDate: string;
+
+  @ApiProperty({
+    description: 'Page number',
+  })
+  page: number;
+
+  @ApiProperty({
+    description: 'Number of items per page',
+  })
+  limit: number;
 }
