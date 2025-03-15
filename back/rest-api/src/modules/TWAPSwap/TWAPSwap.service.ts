@@ -8,7 +8,7 @@ type TWAPSwapOrderArgs = {
   tokenIn: string;
   tokenOut: string;
   amounts: string[];
-  schedule: string[];
+  schedule: Date[];
   userAddress: string;
 };
 
@@ -35,13 +35,6 @@ export class TWAPSwapService {
     schedule = sortedIndices.map((index) => schedule[index]);
     amounts = sortedIndices.map((index) => amounts[index]);
 
-    const lastOrder = await this.twapSwapModel
-      .findOne({ userAddress })
-      .sort({ swapOrderNonce: -1 })
-      .exec();
-
-    const lastSwapNonce = lastOrder ? lastOrder.swapOrderNonce : 0;
-
     for (const [index, time] of schedule.entries()) {
       await this.twapSwapModel.create({
         tokenIn,
@@ -50,7 +43,6 @@ export class TWAPSwapService {
         scheduledTime: time,
         userAddress,
         status: 'pending',
-        swapOrderNonce: lastSwapNonce + index + 1,
       });
     }
   }
