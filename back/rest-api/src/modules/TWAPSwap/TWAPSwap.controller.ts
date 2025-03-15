@@ -65,8 +65,13 @@ export class TWAPSwapController {
       throw new BadRequestException('TokenOut must be a valid EVM address');
     }
 
+    const scheduleDates = body.schedule.map((timestamp) => new Date(timestamp));
+
     try {
-      await this.twapSwapService.placeTwapSwapOrder(body);
+      await this.twapSwapService.placeTwapSwapOrder({
+        ...body,
+        schedule: scheduleDates,
+      });
     } catch (e) {
       throw new BadRequestException((e as any).message);
     }
@@ -90,5 +95,11 @@ export class TWAPSwapController {
       orders,
       total: orders.length,
     };
+  }
+
+  @Post('setAllowanceForTWAPSwap')
+  @ApiOperation({ summary: 'Set Allowance for TWAP Swap' })
+  async setAllowanceForTWAPSwap(@Body() body: PlaceTWAPSwapRequestDTO) {
+    // TODO!!
   }
 }

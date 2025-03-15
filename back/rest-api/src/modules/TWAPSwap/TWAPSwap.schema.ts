@@ -16,10 +16,11 @@ export class TWAPSwapOrder extends Document {
 
   slippage: string;
 
-  @Prop({ required: true })
-  scheduledTime: string;
+  @Prop({ required: true, type: Date })
+  scheduledTime: Date;
 
-  executionTime: string;
+  @Prop({ type: Date })
+  executionTime: Date;
 
   @Prop({ required: true })
   userAddress: string;
@@ -28,9 +29,6 @@ export class TWAPSwapOrder extends Document {
   status: string;
 
   txHash: string;
-
-  @Prop({ required: true })
-  swapOrderNonce: number;
 }
 
 export const TWAPSwapOrderSchema = SchemaFactory.createForClass(TWAPSwapOrder);
