@@ -1,0 +1,29 @@
+{
+  "name": "oogabooga-javier-test-janus",
+  "version": "1.0.0",
+  "description": "Janus the watcher: Scheduler of TWAP Swap orders and listener to the blockchain",
+  "main": "dist/app.js",
+  "scripts": {
+    "start": "ts-node src/app.ts",
+    "build": "tsc",
+    "test": "jest"
+  },
+  "dependencies": {
+    "@types/bunyan": "^1.8.11",
+    "@types/mongodb": "^4.0.7",
+    "bunyan": "^1.8.15",
+    "dotenv": "^16.4.7",
+    "ethers": "^6.13.5",
+    "mongodb": "^6.14.2",
+    "typescript": "^4.0.0"
+  },
+  "devDependencies": {
+    "@types/dotenv": "^8.2.3",
+    "@types/jest": "^27.0.0",
+    "@types/node": "^16.0.0",
+    "jest": "^27.0.0",
+    "ts-jest": "^27.0.0",
+    "ts-node": "^10.0.0"
+  },
+  "license": "MIT"
+}
