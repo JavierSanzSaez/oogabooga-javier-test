@@ -15,3 +15,14 @@ export class GetTWAPSwapResponseDTO {
   orders: TWAPSwapOrder[];
   total: number;
 }
+
+export class CheckAllowanceResponseDTO {
+  quantity: bigint;
+  allowed: boolean;
+}
+
+export class SetAllowanceForTWAPSwapResponseDTO {
+  to: string;
+  data: string;
+  from: string;
+}

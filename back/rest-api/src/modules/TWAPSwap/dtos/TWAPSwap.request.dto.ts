@@ -52,3 +52,38 @@ export class GetTWAPSwapRequestDTO {
   })
   limit: number;
 }
+
+export class CheckAllowanceRequestDTO {
+  @ApiProperty({
+    description: 'Address of the token to check allowance for',
+  })
+  tokenAddress: string;
+
+  @ApiProperty({
+    description: 'Address of the owner of the token',
+  })
+  owner: string;
+
+  @ApiProperty({
+    description: 'Amount to check allowance for',
+  })
+  amount: string;
+}
+
+
+export class SetAllowanceForTWAPSwapRequestDTO {
+  @ApiProperty({
+    description: 'Address of the token to grant allowance',
+  })
+  tokenAddress: string;
+
+  @ApiProperty({
+    description: 'Address of the owner of the token',
+  })
+  owner: string;
+
+  @ApiProperty({
+    description: 'Amount of tokens to grant allowance',
+  })
+  amount: string;
+}
