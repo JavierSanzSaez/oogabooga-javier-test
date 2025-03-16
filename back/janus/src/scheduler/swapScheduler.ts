@@ -37,30 +37,35 @@ export class SwapScheduler {
           $lte: now,
         },
         status: {
-          $eq: "pending",
+          $eq: "scheduled",
         },
       };
 
+      console.log(query)
+
       const orders = await swapOrderCollection.find(query).toArray();
 
-      await this.producer.connect();
-      for (const order of orders) {
-        await this.producer.send({
-          topic: this.kafkaTopic,
-          messages: [{ value: JSON.stringify(order) }],
-        });
-      }
-      logger.info(`Sent ${orders.length} orders to Kafka`);
+      console.log(orders)
 
-      await swapOrderCollection.updateMany(
-        query,
-        {
-          $set: {
-            status: "scheduled",
+      if (orders.length > 0) {
+        await this.producer.connect();
+        for (const order of orders) {
+          await this.producer.send({
+            topic: this.kafkaTopic,
+            messages: [{ value: JSON.stringify(order) }],
+          });
+        }
+        logger.info(`Sent ${orders.length} orders to Kafka`);
+        await swapOrderCollection.updateMany(
+          query,
+          {
+            $set: {
+              status: "pending",
+            },
           },
-        },
-        { upsert: false }
-      );
+          { upsert: false }
+        );
+      }
     } catch (error) {
       logger.error("Error querying MongoDB or sending to Kafka:", error);
     } finally {

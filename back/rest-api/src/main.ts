@@ -1,6 +1,7 @@
 import { NestFactory } from "@nestjs/core";
 import { AppModule } from "./app.module";
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { logger } from "./logger";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -15,5 +16,8 @@ async function bootstrap() {
   SwaggerModule.setup("docs", app, document);
 
   await app.listen(3000);
+
+  logger.info("REST API Ready");
+
 }
 bootstrap();

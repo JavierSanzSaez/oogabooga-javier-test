@@ -34,21 +34,25 @@ export class GetTWAPSwapRequestDTO {
 
   @ApiProperty({
     description: 'Start date to filter orders',
+    required: false,
   })
   startDate: string;
 
   @ApiProperty({
     description: 'End date to filter orders',
+    required: false,
   })
   endDate: string;
 
   @ApiProperty({
     description: 'Page number',
+    default: 1,
   })
   page: number;
 
   @ApiProperty({
-    description: 'Number of items per page',
+    description: 'Number of items per page. Max allowed: 100',
+    default: 10,
   })
   limit: number;
 }
@@ -69,7 +73,6 @@ export class CheckAllowanceRequestDTO {
   })
   amount: string;
 }
-
 
 export class SetAllowanceForTWAPSwapRequestDTO {
   @ApiProperty({

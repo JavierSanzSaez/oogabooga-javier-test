@@ -17,7 +17,7 @@ export class GetTWAPSwapResponseDTO {
 }
 
 export class CheckAllowanceResponseDTO {
-  quantity: bigint;
+  quantity: string;
   allowed: boolean;
 }
 

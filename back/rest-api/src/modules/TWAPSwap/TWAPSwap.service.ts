@@ -15,6 +15,7 @@ import {
   CheckAllowanceResponseDTO,
   SetAllowanceForTWAPSwapResponseDTO,
 } from './dtos/TWAPSwap.response.dto';
+import { logger } from 'src/logger';
 
 type TWAPSwapOrderArgs = {
   tokenIn: string;
@@ -39,23 +40,15 @@ export class TWAPSwapService {
     schedule,
     userAddress,
   }: TWAPSwapOrderArgs): Promise<void> {
-    // To avoid a wrong ordering of schedules provided by the user, we sort the schedules and amounts based on the schedule time
-    const sortedIndices = schedule
-      .map((time, index) => ({ time, index }))
-      .sort((a, b) => new Date(a.time).getTime() - new Date(b.time).getTime())
-      .map(({ index }) => index);
-
-    schedule = sortedIndices.map((index) => schedule[index]);
-    amounts = sortedIndices.map((index) => amounts[index]);
 
     for (const [index, time] of schedule.entries()) {
       await this.twapSwapModel.create({
         tokenIn,
         tokenOut,
-        amounts: amounts[index],
+        amountIn: amounts[index],
         scheduledTime: time,
         userAddress,
-        status: 'pending',
+        status: 'scheduled',
       });
     }
   }
@@ -67,16 +60,17 @@ export class TWAPSwapService {
     page = 1,
     limit = 10,
   }: GetTWAPSwapRequestDTO): Promise<TWAPSwapOrder[]> {
-    const skip = (page - 1) * limit;
+    const skip = Math.max((page - 1) * limit, 0);
+    limit = Math.min(limit, 100);
     const query: any = { userAddress };
 
     if (startDate || endDate) {
       query.scheduledTime = {};
       if (startDate) {
-        query.scheduledTime.$gte = new Date(startDate);
+        query.scheduledTime.$gte = new Date(Number(startDate) * 1000);
       }
       if (endDate) {
-        query.scheduledTime.$lte = new Date(endDate);
+        query.scheduledTime.$lte = new Date(Number(endDate) * 1000);
       }
     }
 
@@ -85,14 +79,14 @@ export class TWAPSwapService {
 
   async checkAllowance({
     tokenAddress,
-    owner: spender,
+    owner,
     amount,
   }: CheckAllowanceRequestDTO): Promise<CheckAllowanceResponseDTO> {
     const NATIVE_TOKEN: Address = zeroAddress; // Default address for Bera native token
 
     if (tokenAddress === NATIVE_TOKEN) {
       return {
-        quantity: maxUint256,
+        quantity: maxUint256.toString(),
         allowed: true,
       };
     }
@@ -103,7 +97,7 @@ export class TWAPSwapService {
       )}/v1/approve/allowance`,
     );
     publicApiUrl.searchParams.set('token', tokenAddress);
-    publicApiUrl.searchParams.set('from', spender);
+    publicApiUrl.searchParams.set('from', owner);
 
     const res = await fetch(publicApiUrl, {
       headers: {
@@ -118,7 +112,7 @@ export class TWAPSwapService {
     const requiredAmount = BigInt(amount);
 
     return {
-      quantity: allowance,
+      quantity: allowance.toString(),
       allowed: allowance >= requiredAmount,
     };
   }
@@ -131,7 +125,7 @@ export class TWAPSwapService {
     const approveAllowanceUrl = new URL(
       `${this.configService.get<string>(
         'OOGABOOGA_PUBLIC_API_URL',
-      )}/v1/approve/allowance`,
+      )}/v1/approve`,
     );
     approveAllowanceUrl.searchParams.set('token', tokenAddress);
     approveAllowanceUrl.searchParams.set('amount', amount);
@@ -148,11 +142,11 @@ export class TWAPSwapService {
       throw new Error('Failed to set allowance');
     }
 
-    const allowanceJson = await approveAllowanceRes.json();
+    const { tx } = await approveAllowanceRes.json();
 
     return {
-      to: allowanceJson.to,
-      data: allowanceJson.data,
+      to: tx.to,
+      data: tx.data,
       from: owner,
     };
   }

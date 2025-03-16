@@ -22,6 +22,4 @@ export class Environment {
     process.env.OOGABOOGA_PUBLIC_API_URL || "";
   static readonly OOGABOOGA_BEARER_TOKEN =
     process.env.OOGABOOGA_BEARER_TOKEN || "";
-
-  static readonly WEBSITES_PORT = process.env.WEBSITES_PORT || 7777;
 }

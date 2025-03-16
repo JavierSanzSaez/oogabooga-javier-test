@@ -4,6 +4,7 @@ import {
   Controller,
   Get,
   Post,
+  Query,
 } from '@nestjs/common';
 import { TWAPSwapService } from './TWAPSwap.service';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
@@ -58,7 +59,11 @@ export class TWAPSwapController {
     ) {
       throw new BadRequestException('Amounts must be valid numbers');
     }
-    if (body.schedule.some((timestamp) => isNaN(Date.parse(timestamp)))) {
+    if (
+      body.schedule.some((timestamp) =>
+        isNaN(Number(new Date(Number(timestamp) * 1000))),
+      )
+    ) {
       throw new BadRequestException('Schedule must be valid timestamps');
     }
     if (!/^0x[a-fA-F0-9]{40}$/.test(body.userAddress)) {
@@ -71,7 +76,7 @@ export class TWAPSwapController {
       throw new BadRequestException('TokenOut must be a valid EVM address');
     }
 
-    const scheduleDates = body.schedule.map((timestamp) => new Date(timestamp));
+    const scheduleDates = body.schedule.map((timestamp) => new Date(Number(timestamp) * 1000));
 
     try {
       const totalAmount = body.amounts.reduce(
@@ -102,16 +107,22 @@ export class TWAPSwapController {
   @Get('getTwapSwapOrders')
   @ApiOperation({ summary: 'Get TWAP Swap Orders' })
   async getTwapSwapOrders(
-    @Body() body: GetTWAPSwapRequestDTO,
+    @Query() query: GetTWAPSwapRequestDTO,
   ): Promise<GetTWAPSwapResponseDTO> {
-    if (body.userAddress === '') {
+    if (query.userAddress === '') {
       throw new BadRequestException('UserAddress must not be empty');
     }
-    if (!/^0x[a-fA-F0-9]{40}$/.test(body.userAddress)) {
+    if (!/^0x[a-fA-F0-9]{40}$/.test(query.userAddress)) {
       throw new BadRequestException('UserAddress must be a valid EVM address');
     }
+    if (query.page < 1) {
+      throw new BadRequestException('Page must be greater than 0');
+    }
+    if (query.limit < 1) {
+      throw new BadRequestException('Limit must be greater than 0');
+    }
 
-    const orders = await this.twapSwapService.getTwapSwapOrders(body);
+    const orders = await this.twapSwapService.getTwapSwapOrders(query);
 
     return {
       orders,
@@ -122,25 +133,25 @@ export class TWAPSwapController {
   @Get('checkAllowance')
   @ApiOperation({ summary: 'Check Allowance' })
   async checkAllowance(
-    @Body() body: CheckAllowanceRequestDTO,
+    @Query() query: CheckAllowanceRequestDTO,
   ): Promise<CheckAllowanceResponseDTO> {
-    if (body.tokenAddress === '' || body.owner === '') {
+    if (query.tokenAddress === '' || query.owner === '') {
       throw new BadRequestException('TokenAddress and Owner must not be empty');
     }
-    if (!/^0x[a-fA-F0-9]{40}$/.test(body.tokenAddress)) {
+    if (!/^0x[a-fA-F0-9]{40}$/.test(query.tokenAddress)) {
       throw new BadRequestException('TokenAddress must be a valid EVM address');
     }
-    if (!/^0x[a-fA-F0-9]{40}$/.test(body.owner)) {
+    if (!/^0x[a-fA-F0-9]{40}$/.test(query.owner)) {
       throw new BadRequestException('Owner must be a valid EVM address');
     }
-    if (body.amount === '') {
+    if (query.amount === '') {
       throw new BadRequestException('Amount must not be empty');
     }
-    if (isNaN(Number(body.amount))) {
+    if (isNaN(Number(query.amount))) {
       throw new BadRequestException('Amount must be a valid number');
     }
 
-    return await this.twapSwapService.checkAllowance(body);
+    return await this.twapSwapService.checkAllowance(query);
   }
 
   @Post('setAllowanceForTWAPSwap')
