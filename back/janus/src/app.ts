@@ -1,5 +1,6 @@
 import { Environment } from "./environment";
 import { MongoDbConnector } from "./infra/mongoConnector";
+import { logger } from "./logger";
 import { SwapScheduler } from "./scheduler/swapScheduler";
 
 async function bootstrap() {
@@ -13,8 +14,10 @@ async function bootstrap() {
   );
 
   swapScheduler.startScheduling();
+
+  logger.info("Janus operative. Scheduler started.");
 }
 
 bootstrap().catch((err) => {
-  console.error("Error starting the event listener:", err);
+  logger.error("Error while executing Janus", err);
 });

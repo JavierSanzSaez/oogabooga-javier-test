@@ -96,8 +96,5 @@ const handleSwap = async (eventData: any, mongoConnector: MongoDbConnector) => {
 };
 
 if (parentPort) {
-  handleSwap(eventData, mongoConnector).catch((error) => {
-    console.error("Error handling swap:", error);
-    parentPort!.postMessage("Error handling swap: " + error.message);
-  });
+  handleSwap(eventData, mongoConnector);
 }

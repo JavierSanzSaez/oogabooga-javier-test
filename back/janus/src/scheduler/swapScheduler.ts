@@ -1,6 +1,7 @@
 import { Kafka } from "kafkajs";
 import { setInterval } from "timers";
 import { MongoDbConnector } from "../infra/mongoConnector";
+import { logger } from "../logger";
 
 export class SwapScheduler {
   private kafka: Kafka;
@@ -35,6 +36,9 @@ export class SwapScheduler {
           $gte: fiveSecondsAgo,
           $lte: now,
         },
+        status: {
+          $eq: "pending",
+        },
       };
 
       const orders = await swapOrderCollection.find(query).toArray();
@@ -46,14 +50,25 @@ export class SwapScheduler {
           messages: [{ value: JSON.stringify(order) }],
         });
       }
+      logger.info(`Sent ${orders.length} orders to Kafka`);
+
+      await swapOrderCollection.updateMany(
+        query,
+        {
+          $set: {
+            status: "scheduled",
+          },
+        },
+        { upsert: false }
+      );
     } catch (error) {
-      console.error("Error querying MongoDB or sending to Kafka:", error);
+      logger.error("Error querying MongoDB or sending to Kafka:", error);
     } finally {
       await this.producer.disconnect();
     }
   }
 
   public startScheduling() {
-    setInterval(() => this.queryAndSendToKafka(), 5000);
+    setInterval(() => this.queryAndSendToKafka(), 5010);
   }
 }

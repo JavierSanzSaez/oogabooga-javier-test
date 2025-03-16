@@ -3,6 +3,7 @@ import { Environment } from "../environment";
 import { MongoDbConnector } from "../infra/mongoConnector";
 import path from "path";
 import { Worker } from "worker_threads";
+import { logger } from "../logger";
 
 export class SwapExecutorOrchestrator {
   private kafka: Kafka;
@@ -31,11 +32,12 @@ export class SwapExecutorOrchestrator {
       },
     });
 
-    console.log(`Listening for Swap Order events...`);
+    logger.info("Listening to Swap Orders...");
   }
 
   private async handleSwap(eventData: any, mongoConnector: MongoDbConnector) {
     if (this.workerPool.length < this.maxWorkers) {
+      logger.info("Handling swap order:", eventData);
       const worker = new Worker(
         path.resolve(__dirname, "./swapExecutorWorker.ts"),
         {
@@ -45,23 +47,23 @@ export class SwapExecutorOrchestrator {
       this.workerPool.push(worker);
 
       worker.on("message", (result) => {
-        console.log("Worker result:", result);
+        logger.info("Worker result:", result);
         this.workerPool = this.workerPool.filter((w) => w !== worker);
       });
 
       worker.on("error", (error) => {
-        console.error("Worker error:", error);
+        logger.error("Worker error:", error);
         this.workerPool = this.workerPool.filter((w) => w !== worker);
       });
 
       worker.on("exit", (code) => {
         if (code !== 0) {
-          console.error(`Worker stopped with exit code ${code}`);
+          logger.error(`Worker stopped with exit code ${code}`);
         }
         this.workerPool = this.workerPool.filter((w) => w !== worker);
       });
     } else {
-      console.log("All workers are busy, retrying...");
+      logger.info("All workers are busy, retrying...");
       setTimeout(() => this.handleSwap(eventData, mongoConnector), 1000);
     }
   }
