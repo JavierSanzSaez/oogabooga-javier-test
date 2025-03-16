@@ -10,7 +10,6 @@ export class Environment {
   static readonly MONGO_DB_NAME = process.env.MONGO_DB_NAME || "";
 
   static readonly BERACHAIN_RPC_HTTP = process.env.BERACHAIN_RPC_HTTP || "";
-  static readonly BERACHAIN_RPC_WS = process.env.BERACHAIN_RPC_WS || "";
   static readonly PRIVATE_KEY = process.env.PRIVATE_KEY || "";
 
   static readonly KAFKA_BROKERS = process.env.KAFKA_BROKERS || "";

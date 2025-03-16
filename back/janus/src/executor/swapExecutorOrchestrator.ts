@@ -21,7 +21,7 @@ export class SwapExecutorOrchestrator {
 
   public async start(mongoConnector: MongoDbConnector) {
     await this.consumer.connect();
-    await this.consumer.subscribe({ topic: "swap-orders" });
+    await this.consumer.subscribe({ topic: Environment.KAFKA_TOPIC });
 
     this.consumer.run({
       eachMessage: async ({ topic, partition, message }) => {

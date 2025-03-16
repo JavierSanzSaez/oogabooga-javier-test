@@ -27,8 +27,8 @@ type TWAPSwapOrderArgs = {
 @Injectable()
 export class TWAPSwapService {
   constructor(
-    @InjectModel(TWAPSwapOrder.name)
     private readonly configService: ConfigService,
+    @InjectModel(TWAPSwapOrder.name)
     private readonly twapSwapModel: Model<TWAPSwapOrder>,
   ) {}
 

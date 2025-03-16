@@ -20,8 +20,7 @@ export class Web3ConfigService {
         : berachain,
     transport: http(),
     account: privateKeyToAccount(
-      (this.configService.get<string>('WEB3_PRIVATE_KEY') as `0x${string}`) ||
-        '0x0',
+      `0x${this.configService.get<string>('WEB3_PRIVATE_KEY')}`
     ),
   }).extend(publicActions as any);
 }
