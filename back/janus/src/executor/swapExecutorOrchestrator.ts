@@ -14,7 +14,7 @@ export class SwapExecutorOrchestrator {
   constructor() {
     this.kafka = new Kafka({
       clientId: "janus",
-      brokers: [Environment.KAFKA_BROKER],
+      brokers: Environment.KAFKA_BROKERS.split(","),
     });
     this.consumer = this.kafka.consumer({ groupId: "janus-group" });
   }
