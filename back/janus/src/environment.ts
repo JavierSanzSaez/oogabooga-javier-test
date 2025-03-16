@@ -24,7 +24,5 @@ export class Environment {
   static readonly OOGABOOGA_BEARER_TOKEN =
     process.env.OOGABOOGA_BEARER_TOKEN || "";
 
-  static readonly KAFKA_BROKER = process.env.KAFKA_BROKER || "";
-
   static readonly WEBSITES_PORT = process.env.WEBSITES_PORT || 7777;
 }
