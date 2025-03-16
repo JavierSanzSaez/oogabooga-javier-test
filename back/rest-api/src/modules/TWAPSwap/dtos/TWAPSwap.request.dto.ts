@@ -33,13 +33,13 @@ export class GetTWAPSwapRequestDTO {
   userAddress: string;
 
   @ApiProperty({
-    description: 'Start date to filter orders',
+    description: 'Start date to filter orders (Timestamp)',
     required: false,
   })
   startDate: string;
 
   @ApiProperty({
-    description: 'End date to filter orders',
+    description: 'End date to filter orders (Timestamp)',
     required: false,
   })
   endDate: string;

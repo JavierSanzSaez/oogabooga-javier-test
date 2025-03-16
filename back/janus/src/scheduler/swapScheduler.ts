@@ -1,11 +1,11 @@
-import { Kafka } from "kafkajs";
+import { Kafka, Producer } from "kafkajs";
 import { setInterval } from "timers";
 import { MongoDbConnector } from "../infra/mongoConnector";
 import { logger } from "../logger";
 
 export class SwapScheduler {
   private kafka: Kafka;
-  private producer: any;
+  private producer: Producer;
   private kafkaTopic: string;
   private mongoConnector: MongoDbConnector;
 
@@ -25,8 +25,8 @@ export class SwapScheduler {
   }
 
   private async queryAndSendToKafka() {
-    const now = new Date();
-    const fiveSecondsAgo = new Date(now.getTime() - 5000);
+    const now = Date.now();
+    const fiveSecondsAgo = now - 5000;
 
     try {
       const swapOrderCollection = this.mongoConnector.getSwapOrders();
@@ -41,11 +41,7 @@ export class SwapScheduler {
         },
       };
 
-      console.log(query)
-
       const orders = await swapOrderCollection.find(query).toArray();
-
-      console.log(orders)
 
       if (orders.length > 0) {
         await this.producer.connect();
@@ -54,6 +50,7 @@ export class SwapScheduler {
             topic: this.kafkaTopic,
             messages: [{ value: JSON.stringify(order) }],
           });
+          logger.info(`Sent order to Kafka: ${JSON.stringify(order)}`);
         }
         logger.info(`Sent ${orders.length} orders to Kafka`);
         await swapOrderCollection.updateMany(

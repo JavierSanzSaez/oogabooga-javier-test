@@ -76,8 +76,6 @@ export class TWAPSwapController {
       throw new BadRequestException('TokenOut must be a valid EVM address');
     }
 
-    const scheduleDates = body.schedule.map((timestamp) => new Date(Number(timestamp) * 1000));
-
     try {
       const totalAmount = body.amounts.reduce(
         (acc, amount) => acc.plus(new BigNumber(amount)),
@@ -96,8 +94,7 @@ export class TWAPSwapController {
       }
 
       await this.twapSwapService.placeTwapSwapOrder({
-        ...body,
-        schedule: scheduleDates,
+        ...body
       });
     } catch (e) {
       throw new BadRequestException((e as any).message);

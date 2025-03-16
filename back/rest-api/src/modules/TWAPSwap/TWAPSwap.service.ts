@@ -21,7 +21,7 @@ type TWAPSwapOrderArgs = {
   tokenIn: string;
   tokenOut: string;
   amounts: string[];
-  schedule: Date[];
+  schedule: string[];
   userAddress: string;
 };
 
@@ -46,7 +46,7 @@ export class TWAPSwapService {
         tokenIn,
         tokenOut,
         amountIn: amounts[index],
-        scheduledTime: time,
+        scheduledTime: Number(time),
         userAddress,
         status: 'scheduled',
       });

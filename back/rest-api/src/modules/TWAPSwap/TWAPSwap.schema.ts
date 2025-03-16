@@ -16,11 +16,11 @@ export class TWAPSwapOrder extends Document {
 
   slippage: string;
 
-  @Prop({ required: true, type: Date })
-  scheduledTime: Date;
+  @Prop({ required: true, type: Number })
+  scheduledTime: number;
 
-  @Prop({ type: Date })
-  executionTime: Date;
+  @Prop({ type: Number })
+  executionTime: number;
 
   @Prop({ required: true })
   userAddress: string;

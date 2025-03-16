@@ -32,7 +32,7 @@ export class MongoDbConnector {
   }
 
   public getSwapOrders() {
-    return this.mongoClient.db(this.mongoDbName).collection('swap_orders');
+    return this.mongoClient.db(this.mongoDbName).collection('twapswaporders');
   }
 
 

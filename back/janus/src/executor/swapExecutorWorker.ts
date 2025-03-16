@@ -69,7 +69,7 @@ const handleSwap = async (eventData: any, mongoConnector: MongoDbConnector) => {
       amountIn: eventData.amountIn,
       amountOut: eventData.amountOut,
       slippage: eventData.slippage,
-      executionTime: new Date(Number(block.timestamp) * 1000),
+      executionTime: Number(block.timestamp),
       status: rcpt.status,
       txHash: hash,
     };

@@ -4,8 +4,8 @@ type TWAPSwapOrder = {
   amountIn: string;
   amountOut: string;
   slippage: string;
-  scheduledTime: Date;
-  executionTime: Date;
+  scheduledTime: number;
+  executionTime: number;
   userAddress: string;
   status: string;
   txHash: string;
