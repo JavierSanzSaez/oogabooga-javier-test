@@ -1,6 +1,6 @@
-import { MongoClient } from 'mongodb';
-import { logger } from '../logger';
-import { Environment } from '../environment';
+import { MongoClient } from "mongodb";
+import { logger } from "../logger";
+import { Environment } from "../environment";
 
 export class MongoDbConnector {
   private static instance: MongoDbConnector;
@@ -18,9 +18,9 @@ export class MongoDbConnector {
 
       try {
         await MongoDbConnector.instance.mongoClient.connect();
-        logger.info('Successfully connected to MongoDb');
+        logger.info("Successfully connected to MongoDb");
       } catch (error) {
-        logger.error('Connection to MongoDb failed', error);
+        logger.error("Connection to MongoDb failed", error);
         process.exit();
       }
     }
@@ -32,9 +32,6 @@ export class MongoDbConnector {
   }
 
   public getSwapOrders() {
-    return this.mongoClient.db(this.mongoDbName).collection('twapswaporders');
+    return this.mongoClient.db(this.mongoDbName).collection("twapswaporders");
   }
-
-
-
 }
