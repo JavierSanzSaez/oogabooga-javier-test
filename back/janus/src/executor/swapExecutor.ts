@@ -85,8 +85,6 @@ export class SwapExecutor {
         // Add 10% gas buffer
         const gasWithBuffer = (gas * 11n) / 10n;
 
-        const balance = await client.getBalance({ address: tx.from });
-
         const hash = await client.sendTransaction({
           from: tx.from,
           to: tx.to,
