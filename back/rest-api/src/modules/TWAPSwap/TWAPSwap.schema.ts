@@ -14,6 +14,7 @@ export class TWAPSwapOrder extends Document {
 
   amountOut: string;
 
+  @Prop({ required: true })
   slippage: string;
 
   @Prop({ required: true, type: Number })

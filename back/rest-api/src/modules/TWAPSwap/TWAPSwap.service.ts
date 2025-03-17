@@ -22,6 +22,7 @@ type TWAPSwapOrderArgs = {
   tokenOut: string;
   amounts: string[];
   schedule: string[];
+  slippage: string;
   userAddress: string;
 };
 
@@ -38,6 +39,7 @@ export class TWAPSwapService {
     tokenOut,
     amounts,
     schedule,
+    slippage,
     userAddress,
   }: TWAPSwapOrderArgs): Promise<void> {
 
@@ -48,6 +50,7 @@ export class TWAPSwapService {
         amountIn: amounts[index],
         scheduledTime: Number(time),
         userAddress,
+        slippage: slippage,
         status: 'scheduled',
       });
     }

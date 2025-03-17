@@ -17,9 +17,16 @@ export class PlaceTWAPSwapRequestDTO {
   amounts: string[];
 
   @ApiProperty({
-    description: 'Array of timestamps at which to execute the split orders',
+    description:
+      'Array of timestamps (up to milliseconds) at which to execute the split orders',
   })
   schedule: string[];
+
+  @ApiProperty({
+    description: 'Slippage tolerance for the swap',
+  })
+  slippage: string;
+
   @ApiProperty({
     description: 'Address of ',
   })

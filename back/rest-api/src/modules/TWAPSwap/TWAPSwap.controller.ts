@@ -75,6 +75,14 @@ export class TWAPSwapController {
     if (!/^0x[a-fA-F0-9]{40}$/.test(body.tokenOut)) {
       throw new BadRequestException('TokenOut must be a valid EVM address');
     }
+    if (isNaN(Number(body.slippage))) {
+      throw new BadRequestException('Slippage must be a valid number');
+    }
+    if (new Set(body.schedule).size !== body.schedule.length) {
+      throw new BadRequestException(
+        'Schedule must not contain duplicate timestamps',
+      );
+    }
 
     try {
       const totalAmount = body.amounts.reduce(
@@ -94,7 +102,7 @@ export class TWAPSwapController {
       }
 
       await this.twapSwapService.placeTwapSwapOrder({
-        ...body
+        ...body,
       });
     } catch (e) {
       throw new BadRequestException((e as any).message);
