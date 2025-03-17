@@ -143,8 +143,7 @@ export class SwapExecutor {
           );
 
           return;
-        }
-        else {
+        } else {
           throw new Error("Error in transaction" + error.message);
         }
       }

@@ -14,7 +14,7 @@ The full architecture of the solution can be seen in the following image.
 
 
 ### User Flow
-1. User asks for a trade for X tokens in a Y time, specifying the intervals and the amounts to swap in each interval.
+1. User asks for a trade for X tokens in a Y time, specifying the intervals (in UNIX Timestamps for milliseconds) and the amounts to swap in each interval, as well as the slippage.
 2. The backend checks if the splitting agent has enough allowance to commit the entire swap.
 	1. If the agent does not have enough balance, the backend returns an error indicating the allowance granted to the router and the extra allowance needed for the swap to work.
 	2. The user will have to interact with an open endpoint to generate the data of the transaction to sign.
